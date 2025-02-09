@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ticket Details</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-4">
+    <h2>Ticket Details</h2>
+    <div class="mb-3">
+      <strong>ID:</strong> <%= ticket.id %>
+    </div>
+    <div class="mb-3">
+      <strong>Hostname:</strong> <%= ticket.hostname %>
+    </div>
+    <div class="mb-3">
+      <strong>Description:</strong> <%= ticket.description %>
+    </div>
+    <div class="mb-3">
+      <strong>Priority:</strong> <%= ticket.priority %>
+    </div>
+    <div class="mb-3">
+      <strong>Status:</strong> <%= ticket.status %>
+    </div>
+    <div class="mb-3">
+      <strong>Tests:</strong>
+      <ul>
+        <% ticket.tests.forEach(test => { %>
+          <li><strong><%= test.test %>:</strong> <%= test.result %></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="mb-3">
+      <strong>Attachments:</strong>
+      <ul>
+        <% ticket.attachments.forEach(file => { %>
+          <li><a href="/uploads/<%= file.filename %>" target="_blank"><%= file.originalname %></a></li>
+        <% }); %>
+      </ul>
+    </div>
+    <div class="mb-3">
+      <a href="/tickets" class="btn btn-secondary">Back to Tickets</a>
+      <% if (currentUser && currentUser.role === 'admin') { %>
+        <a href="/tickets/<%= ticket.id %>/edit" class="btn btn-warning">Edit Ticket</a>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
