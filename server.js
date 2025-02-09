@@ -23,8 +23,24 @@ const __dirname = path.dirname(__filename);
 const app = express();
 
 // Security and middleware
-app.use(helmet());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "style-src": ["'self'", "'unsafe-inline'"],
+    },
+  },
+}));
+
+// Serve static files with correct MIME types
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    }
+  }
+}));
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

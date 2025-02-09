@@ -1,0 +1,11 @@
+{
+  "tickets": [],
+  "users": [
+    {
+      "id": "1",
+      "username": "admin",
+      "password": "$2b$10$rA3WzE4U2Rxdv81TD6Mby.KqRGf29LIVoo7P7iGXg8FZH6c2dRXLe",
+      "role": "admin"
+    }
+  ]
+}
