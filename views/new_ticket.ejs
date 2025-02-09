@@ -3,27 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>New Ticket - Ticketing System</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              200: '#bae6fd',
-              300: '#7dd3fc',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="/css/styles.css" rel="stylesheet">
 </head>
 <body class="h-full">
   <div class="min-h-full">
@@ -69,7 +49,7 @@
 
           <div class="bg-white shadow sm:rounded-lg">
             <div class="px-4 py-5 sm:p-6">
-              <form action="/tickets" method="POST" class="space-y-6">
+              <form action="/tickets" method="POST" class="space-y-6" enctype="multipart/form-data">
                 <div>
                   <label for="hostname" class="block text-sm font-medium leading-6 text-gray-900">Hostname</label>
                   <div class="mt-2">
@@ -110,6 +90,33 @@
                   </div>
                 </div>
 
+                <div>
+                  <label class="block text-sm font-medium leading-6 text-gray-900 mb-2">Tests</label>
+                  <div id="tests-container" class="space-y-4">
+                    <div class="flex gap-4">
+                      <div class="flex-1">
+                        <input type="text" name="test[]" placeholder="Test description" required
+                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                      </div>
+                      <div class="flex-1">
+                        <input type="text" name="result[]" placeholder="Test result" required
+                               class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                      </div>
+                    </div>
+                  </div>
+                  <button type="button" onclick="addTestField()" class="mt-2 text-sm text-primary-600 hover:text-primary-700">
+                    + Add another test
+                  </button>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium leading-6 text-gray-900">Attachments</label>
+                  <div class="mt-2">
+                    <input type="file" name="attachments" multiple
+                           class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100">
+                  </div>
+                </div>
+
                 <div class="flex justify-end">
                   <button type="submit" 
                           class="ml-3 inline-flex justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
@@ -117,6 +124,25 @@
                   </button>
                 </div>
               </form>
+
+              <script>
+                function addTestField() {
+                  const container = document.getElementById('tests-container');
+                  const newTest = document.createElement('div');
+                  newTest.className = 'flex gap-4 mt-4';
+                  newTest.innerHTML = `
+                    <div class="flex-1">
+                      <input type="text" name="test[]" placeholder="Test description" required
+                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                    </div>
+                    <div class="flex-1">
+                      <input type="text" name="result[]" placeholder="Test result" required
+                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                    </div>
+                  `;
+                  container.appendChild(newTest);
+                }
+              </script>
             </div>
           </div>
         </div>

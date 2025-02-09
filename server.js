@@ -32,6 +32,9 @@ app.use(helmet({
   },
 }));
 
+// Set proper MIME types
+express.static.mime.define({'text/css': ['css']});
+
 // Serve static files with correct MIME types
 app.use(express.static(path.join(__dirname, 'public'), {
   setHeaders: (res, path) => {
