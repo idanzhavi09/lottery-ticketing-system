@@ -13,7 +13,7 @@ import bcrypt from 'bcrypt';
 
 import authRoutes from './routes/authRoutes.js';
 import ticketRoutes from './routes/ticketRoutes.js';
-import User from './models/User.js';
+import { findUserByUsername, findUserById } from './models/User.js';
 
 const app = express();
 
@@ -39,7 +39,7 @@ app.use(passport.session());
 // Configure Passport local strategy
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
-    const user = await User.findUserByUsername(username);
+    const user = await findUserByUsername(username);
     if (!user) {
       return done(null, false, { message: 'Incorrect username.' });
     }
@@ -59,7 +59,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await User.findUserById(id);
+    const user = await findUserById(id);
     done(null, user);
   } catch (err) {
     done(err);

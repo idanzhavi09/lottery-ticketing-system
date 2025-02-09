@@ -1,5 +1,5 @@
 // models/User.js
-const db = require('./db');
+import db from './db.js';
 
 async function findUserByUsername(username) {
   await db.read();
@@ -11,7 +11,4 @@ async function findUserById(id) {
   return db.data.users.find(user => user.id === id);
 }
 
-module.exports = {
-  findUserByUsername,
-  findUserById
-};
+export { findUserByUsername, findUserById };

@@ -1,9 +1,9 @@
 // controllers/ticketController.js
-const Ticket = require('../models/Ticket');
+import { getAllTickets, getTicketById, createTicket, updateTicket, deleteTicket } from '../models/Ticket.js';
 
-exports.listTickets = async (req, res) => {
+const listTickets = async (req, res) => {
   try {
-    const tickets = await Ticket.getAllTickets();
+    const tickets = await getAllTickets();
     res.render('tickets', { tickets, error: req.flash('error'), success: req.flash('success') });
   } catch (err) {
     req.flash('error', 'Error retrieving tickets.');
@@ -11,11 +11,11 @@ exports.listTickets = async (req, res) => {
   }
 };
 
-exports.showNewTicketForm = (req, res) => {
+const showNewTicketForm = (req, res) => {
   res.render('new_ticket', { error: req.flash('error') });
 };
 
-exports.createTicket = async (req, res) => {
+const createTicketHandler = async (req, res) => {
   try {
     const { hostname, description, priority } = req.body;
     let tests = [];
@@ -37,7 +37,7 @@ exports.createTicket = async (req, res) => {
           path: file.path
         }))
       : [];
-    await Ticket.createTicket({
+    await createTicket({
       hostname,
       description,
       priority,
@@ -54,9 +54,9 @@ exports.createTicket = async (req, res) => {
   }
 };
 
-exports.getTicketDetail = async (req, res) => {
+const getTicketDetailHandler = async (req, res) => {
   try {
-    const ticket = await Ticket.getTicketById(req.params.id);
+    const ticket = await getTicketById(req.params.id);
     if (!ticket) {
       req.flash('error', 'Ticket not found.');
       return res.redirect('/tickets');
@@ -68,9 +68,9 @@ exports.getTicketDetail = async (req, res) => {
   }
 };
 
-exports.showEditTicketForm = async (req, res) => {
+const showEditTicketForm = async (req, res) => {
   try {
-    const ticket = await Ticket.getTicketById(req.params.id);
+    const ticket = await getTicketById(req.params.id);
     if (!ticket) {
       req.flash('error', 'Ticket not found.');
       return res.redirect('/tickets');
@@ -82,7 +82,7 @@ exports.showEditTicketForm = async (req, res) => {
   }
 };
 
-exports.updateTicket = async (req, res) => {
+const updateTicketHandler = async (req, res) => {
   try {
     const { hostname, description, priority, status } = req.body;
     let tests = [];
@@ -104,7 +104,7 @@ exports.updateTicket = async (req, res) => {
           path: file.path
         }))
       : [];
-    await Ticket.updateTicket(req.params.id, { hostname, description, priority, status, tests, attachments });
+    await updateTicket(req.params.id, { hostname, description, priority, status, tests, attachments });
     req.flash('success', 'Ticket updated successfully.');
     res.redirect(`/tickets/${req.params.id}`);
   } catch (err) {
@@ -114,9 +114,9 @@ exports.updateTicket = async (req, res) => {
   }
 };
 
-exports.deleteTicket = async (req, res) => {
+const deleteTicketHandler = async (req, res) => {
   try {
-    const success = await Ticket.deleteTicket(req.params.id);
+    const success = await deleteTicket(req.params.id);
     if (!success) {
       req.flash('error', 'Ticket not found.');
     } else {
@@ -129,4 +129,12 @@ exports.deleteTicket = async (req, res) => {
   }
 };
 
-export default { listTickets, showNewTicketForm, createTicket, getTicketDetail, showEditTicketForm, updateTicket, deleteTicket };
+export default {
+  listTickets,
+  showNewTicketForm,
+  createTicket: createTicketHandler,
+  getTicketDetail: getTicketDetailHandler,
+  showEditTicketForm,
+  updateTicket: updateTicketHandler,
+  deleteTicket: deleteTicketHandler
+};
