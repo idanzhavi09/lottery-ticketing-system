@@ -1,7 +1,7 @@
 // routes/ticketRoutes.js
 import express from 'express';
 const router = express.Router();
-import ticketController from '../controllers/ticketController';
+import ticketController from '../controllers/ticketController.js';
 import multer from 'multer';
 import path from 'path'; 
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
@@ -40,4 +40,4 @@ router.post('/:id/edit', ensureAuthenticated, ensureAdmin, upload.array('attachm
 // Delete ticket (admin only)
 router.post('/:id/delete', ensureAuthenticated, ensureAdmin, ticketController.deleteTicket);
 
-module.exports = router;
+export default router;
