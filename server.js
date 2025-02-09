@@ -11,9 +11,9 @@ import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import bcrypt from 'bcrypt';
 
-import authRoutes from './routes/authRoutes';
-import ticketRoutes from './routes/ticketRoutes';
-import User from './models/User';
+import authRoutes from './routes/authRoutes.js';
+import ticketRoutes from './routes/ticketRoutes.js';
+import User from './models/User.js';
 
 const app = express();
 
