@@ -3,27 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Ticket Details - Ticketing System</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              200: '#bae6fd',
-              300: '#7dd3fc',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link href="/css/styles.css" rel="stylesheet">
 </head>
 <body class="h-full">
   <div class="min-h-full">
@@ -124,6 +104,54 @@
                   <dt class="text-sm font-medium text-gray-500">Created At</dt>
                   <dd class="mt-1 text-sm text-gray-900"><%= new Date(ticket.createdAt).toLocaleString() %></dd>
                 </div>
+
+                <div class="sm:col-span-2">
+                  <dt class="text-sm font-medium text-gray-500">Tests</dt>
+                  <dd class="mt-2">
+                    <div class="border rounded-lg divide-y">
+                      <% ticket.tests.forEach(test => { %>
+                        <div class="px-4 py-3">
+                          <div class="grid grid-cols-2 gap-4">
+                            <div>
+                              <div class="text-sm font-medium text-gray-900">Test</div>
+                              <div class="mt-1 text-sm text-gray-600"><%= test.test %></div>
+                            </div>
+                            <div>
+                              <div class="text-sm font-medium text-gray-900">Result</div>
+                              <div class="mt-1 text-sm text-gray-600"><%= test.result %></div>
+                            </div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                  </dd>
+                </div>
+
+                <% if (ticket.attachments && ticket.attachments.length > 0) { %>
+                  <div class="sm:col-span-2">
+                    <dt class="text-sm font-medium text-gray-500">Attachments</dt>
+                    <dd class="mt-2">
+                      <ul class="divide-y divide-gray-200 rounded-md border border-gray-200">
+                        <% ticket.attachments.forEach(attachment => { %>
+                          <li class="flex items-center justify-between py-3 pl-3 pr-4 text-sm">
+                            <div class="flex w-0 flex-1 items-center">
+                              <svg class="h-5 w-5 flex-shrink-0 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M15.621 4.379a3 3 0 00-4.242 0l-7 7a3 3 0 004.241 4.243h.001l.497-.5a.75.75 0 011.064 1.057l-.498.501-.002.002a4.5 4.5 0 01-6.364-6.364l7-7a4.5 4.5 0 016.368 6.36l-3.455 3.553A2.625 2.625 0 119.52 9.52l3.45-3.451a.75.75 0 111.061 1.06l-3.45 3.451a1.125 1.125 0 001.587 1.595l3.454-3.553a3 3 0 000-4.242z" clip-rule="evenodd" />
+                              </svg>
+                              <span class="ml-2 w-0 flex-1 truncate"><%= attachment.originalname %></span>
+                            </div>
+                            <div class="ml-4 flex-shrink-0">
+                              <a href="/uploads/<%= attachment.filename %>" target="_blank" class="font-medium text-primary-600 hover:text-primary-500">
+                                Download
+                              </a>
+                            </div>
+                          </li>
+                        <% }); %>
+                      </ul>
+                    </dd>
+                  </div>
+                <% } %>
+
               </dl>
             </div>
           </div>
