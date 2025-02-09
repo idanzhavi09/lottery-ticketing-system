@@ -10,10 +10,15 @@ import flash from 'connect-flash';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import bcrypt from 'bcrypt';
+import { fileURLToPath } from 'url';
 
 import authRoutes from './routes/authRoutes.js';
 import ticketRoutes from './routes/ticketRoutes.js';
 import { findUserByUsername, findUserById } from './models/User.js';
+
+// In ESM, __dirname isn't available; so create it manually:
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 

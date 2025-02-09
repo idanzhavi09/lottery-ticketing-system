@@ -1,70 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full bg-gray-50">
 <head>
   <meta charset="utf-8">
-  <title>Create Ticket</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>New Ticket - Ticketing System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    function addTestField() {
-      const container = document.getElementById('tests-container');
-      const div = document.createElement('div');
-      div.className = 'row mb-2';
-      div.innerHTML = `
-        <div class="col-md-6">
-          <input type="text" name="test" class="form-control" placeholder="Test name" required>
-        </div>
-        <div class="col-md-6">
-          <input type="text" name="result" class="form-control" placeholder="Test result" required>
-        </div>
-      `;
-      container.appendChild(div);
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
     }
   </script>
 </head>
-<body>
-  <div class="container mt-4">
-    <h2>Create New Ticket</h2>
-    <% if (error && error.length > 0) { %>
-      <div class="alert alert-danger">
-        <% error.forEach(function(msg){ %>
-          <div><%= msg %></div>
-        <% }); %>
-      </div>
-    <% } %>
-    <form action="/tickets" method="POST" enctype="multipart/form-data">
-      <div class="mb-3">
-        <label class="form-label">Hostname</label>
-        <input type="text" name="hostname" class="form-control" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Description</label>
-        <textarea name="description" class="form-control" required></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Priority</label>
-        <select name="priority" class="form-select" required>
-          <option value="high">High</option>
-          <option value="medium">Medium</option>
-          <option value="low">Low</option>
-        </select>
-      </div>
-      <div id="tests-container">
-        <div class="row mb-2">
-          <div class="col-md-6">
-            <input type="text" name="test" class="form-control" placeholder="Test name" required>
+<body class="h-full">
+  <div class="min-h-full">
+    <nav class="bg-white shadow-sm">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+          <div class="flex">
+            <div class="flex flex-shrink-0 items-center">
+              <a href="/tickets" class="text-xl font-bold text-primary-600">Ticketing System</a>
+            </div>
           </div>
-          <div class="col-md-6">
-            <input type="text" name="result" class="form-control" placeholder="Test result" required>
+          <div class="flex items-center">
+            <% if (currentUser) { %>
+              <span class="text-sm text-gray-700 mr-4">Hello, <%= currentUser.username %></span>
+              <a href="/logout" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Logout</a>
+            <% } else { %>
+              <a href="/login" class="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">Login</a>
+            <% } %>
           </div>
         </div>
       </div>
-      <button type="button" class="btn btn-secondary mb-3" onclick="addTestField()">Add Another Test</button>
-      <div class="mb-3">
-        <label class="form-label">Attachments</label>
-        <input type="file" name="attachments" multiple class="form-control">
-      </div>
-      <button type="submit" class="btn btn-primary">Submit Ticket</button>
-    </form>
+    </nav>
+
+    <div class="py-10">
+      <main>
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="min-w-0 flex-1">
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Create New Ticket</h2>
+            </div>
+            <div class="mt-4 flex md:ml-4 md:mt-0">
+              <a href="/tickets" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Back to Tickets</a>
+            </div>
+          </div>
+
+          <% if (error && error.length > 0) { %>
+            <div class="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+              <% error.forEach(function(msg){ %>
+                <div><%= msg %></div>
+              <% }); %>
+            </div>
+          <% } %>
+
+          <div class="bg-white shadow sm:rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+              <form action="/tickets" method="POST" class="space-y-6">
+                <div>
+                  <label for="hostname" class="block text-sm font-medium leading-6 text-gray-900">Hostname</label>
+                  <div class="mt-2">
+                    <input type="text" name="hostname" id="hostname" required
+                           class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                  </div>
+                </div>
+
+                <div>
+                  <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                  <div class="mt-2">
+                    <textarea name="description" id="description" rows="4" required
+                              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6"></textarea>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="priority" class="block text-sm font-medium leading-6 text-gray-900">Priority</label>
+                  <div class="mt-2">
+                    <select name="priority" id="priority" required
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="status" class="block text-sm font-medium leading-6 text-gray-900">Status</label>
+                  <div class="mt-2">
+                    <select name="status" id="status" required
+                            class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6">
+                      <option value="Open">Open</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Closed">Closed</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="flex justify-end">
+                  <button type="submit" 
+                          class="ml-3 inline-flex justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                    Create Ticket
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </body>
 </html>

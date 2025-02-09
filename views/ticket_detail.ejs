@@ -1,49 +1,134 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full bg-gray-50">
 <head>
   <meta charset="utf-8">
-  <title>Ticket Details</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Ticket Details - Ticketing System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <div class="container mt-4">
-    <h2>Ticket Details</h2>
-    <div class="mb-3">
-      <strong>ID:</strong> <%= ticket.id %>
-    </div>
-    <div class="mb-3">
-      <strong>Hostname:</strong> <%= ticket.hostname %>
-    </div>
-    <div class="mb-3">
-      <strong>Description:</strong> <%= ticket.description %>
-    </div>
-    <div class="mb-3">
-      <strong>Priority:</strong> <%= ticket.priority %>
-    </div>
-    <div class="mb-3">
-      <strong>Status:</strong> <%= ticket.status %>
-    </div>
-    <div class="mb-3">
-      <strong>Tests:</strong>
-      <ul>
-        <% ticket.tests.forEach(test => { %>
-          <li><strong><%= test.test %>:</strong> <%= test.result %></li>
-        <% }); %>
-      </ul>
-    </div>
-    <div class="mb-3">
-      <strong>Attachments:</strong>
-      <ul>
-        <% ticket.attachments.forEach(file => { %>
-          <li><a href="/uploads/<%= file.filename %>" target="_blank"><%= file.originalname %></a></li>
-        <% }); %>
-      </ul>
-    </div>
-    <div class="mb-3">
-      <a href="/tickets" class="btn btn-secondary">Back to Tickets</a>
-      <% if (currentUser && currentUser.role === 'admin') { %>
-        <a href="/tickets/<%= ticket.id %>/edit" class="btn btn-warning">Edit Ticket</a>
-      <% } %>
+<body class="h-full">
+  <div class="min-h-full">
+    <nav class="bg-white shadow-sm">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+          <div class="flex">
+            <div class="flex flex-shrink-0 items-center">
+              <a href="/tickets" class="text-xl font-bold text-primary-600">Ticketing System</a>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <% if (currentUser) { %>
+              <span class="text-sm text-gray-700 mr-4">Hello, <%= currentUser.username %></span>
+              <a href="/logout" class="rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Logout</a>
+            <% } else { %>
+              <a href="/login" class="rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-700">Login</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="py-10">
+      <main>
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div class="md:flex md:items-center md:justify-between mb-8">
+            <div class="min-w-0 flex-1">
+              <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">Ticket #<%= ticket.id %></h2>
+            </div>
+            <div class="mt-4 flex space-x-3 md:ml-4 md:mt-0">
+              <a href="/tickets" class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">Back to Tickets</a>
+              <% if (currentUser && currentUser.role === 'admin') { %>
+                <a href="/tickets/<%= ticket.id %>/edit" class="inline-flex items-center rounded-md bg-yellow-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-600">Edit Ticket</a>
+                <form action="/tickets/<%= ticket.id %>/delete" method="POST" class="inline">
+                  <button type="submit" onclick="return confirm('Are you sure?');" 
+                          class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-700">
+                    Delete Ticket
+                  </button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+            <div class="px-4 py-5 sm:px-6">
+              <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">Hostname</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= ticket.hostname %></dd>
+                </div>
+                
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">Created By</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= ticket.createdBy %></dd>
+                </div>
+
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">Priority</dt>
+                  <dd class="mt-1 text-sm">
+                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
+                      <% if (ticket.priority === 'High') { %>
+                        bg-red-50 text-red-700
+                      <% } else if (ticket.priority === 'Medium') { %>
+                        bg-yellow-50 text-yellow-700
+                      <% } else { %>
+                        bg-green-50 text-green-700
+                      <% } %>
+                    ">
+                      <%= ticket.priority %>
+                    </span>
+                  </dd>
+                </div>
+
+                <div class="sm:col-span-1">
+                  <dt class="text-sm font-medium text-gray-500">Status</dt>
+                  <dd class="mt-1 text-sm">
+                    <span class="inline-flex items-center rounded-md px-2 py-1 text-xs font-medium
+                      <% if (ticket.status === 'Open') { %>
+                        bg-blue-50 text-blue-700
+                      <% } else if (ticket.status === 'In Progress') { %>
+                        bg-purple-50 text-purple-700
+                      <% } else { %>
+                        bg-gray-50 text-gray-700
+                      <% } %>
+                    ">
+                      <%= ticket.status %>
+                    </span>
+                  </dd>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <dt class="text-sm font-medium text-gray-500">Description</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= ticket.description %></dd>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <dt class="text-sm font-medium text-gray-500">Created At</dt>
+                  <dd class="mt-1 text-sm text-gray-900"><%= new Date(ticket.createdAt).toLocaleString() %></dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 </body>

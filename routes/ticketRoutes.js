@@ -1,9 +1,16 @@
 // routes/ticketRoutes.js
 import express from 'express';
-const router = express.Router();
-import ticketController from '../controllers/ticketController.js';
 import multer from 'multer';
-import path from 'path'; 
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { getAllTickets, getTicketById, createTicket, updateTicket, deleteTicket } from '../models/Ticket.js';
+import ticketController from '../controllers/ticketController.js';
+
+// In ESM, __dirname isn't available; so create it manually:
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const router = express.Router();
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
 
 // Middleware to ensure the user is authenticated
