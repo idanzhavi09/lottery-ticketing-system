@@ -1,7 +1,7 @@
 // routes/authRoutes.js
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const authController = require('../controllers/authController');
+import authController from '../controllers/authController';
 
 router.get('/login', authController.getLogin);
 router.post('/login', authController.postLogin);

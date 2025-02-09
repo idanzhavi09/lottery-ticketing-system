@@ -2,6 +2,7 @@
   "name": "lottery-ticketing-system",
   "version": "1.0.0",
   "description": "Ticketing system for the lottery project NOC support",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

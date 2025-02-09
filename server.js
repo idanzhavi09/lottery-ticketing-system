@@ -1,19 +1,19 @@
 // server.js
-const fs = require('fs');
-const https = require('https');
-const path = require('path');
-const express = require('express');
-const helmet = require('helmet');
-const bodyParser = require('body-parser');
-const session = require('express-session');
-const flash = require('connect-flash');
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcrypt');
+import fs from 'fs';
+import https from 'https';
+import path from 'path';
+import express from 'express';
+import helmet from 'helmet';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import flash from 'connect-flash';
+import passport from 'passport';
+import LocalStrategy from 'passport-local';
+import bcrypt from 'bcrypt';
 
-const authRoutes = require('./routes/authRoutes');
-const ticketRoutes = require('./routes/ticketRoutes');
-const User = require('./models/User');
+import authRoutes from './routes/authRoutes';
+import ticketRoutes from './routes/ticketRoutes';
+import User from './models/User';
 
 const app = express();
 

@@ -1,9 +1,9 @@
 // routes/ticketRoutes.js
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const ticketController = require('../controllers/ticketController');
-const multer = require('multer');
-const path = require('path');
+import ticketController from '../controllers/ticketController';
+import multer from 'multer';
+import path from 'path'; 
 const upload = multer({ dest: path.join(__dirname, '../uploads/') });
 
 // Middleware to ensure the user is authenticated
