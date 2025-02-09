@@ -11,7 +11,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const router = express.Router();
-const upload = multer({ dest: path.join(__dirname, '../uploads/') });
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads/'));
+  },
+  filename: function (req, file, cb) {
+    // Preserve the original file extension
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Middleware to ensure the user is authenticated
 function ensureAuthenticated(req, res, next) {
