@@ -17,3 +17,6 @@ exports.logout = (req, res, next) => {
     res.redirect('/login');
   });
 };
+
+
+export default { getLogin, postLogin, logout };

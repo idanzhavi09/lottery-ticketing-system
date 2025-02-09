@@ -128,3 +128,5 @@ exports.deleteTicket = async (req, res) => {
     res.redirect('/tickets');
   }
 };
+
+export default { listTickets, showNewTicketForm, createTicket, getTicketDetail, showEditTicketForm, updateTicket, deleteTicket };
